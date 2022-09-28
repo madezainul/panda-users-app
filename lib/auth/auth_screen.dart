@@ -36,7 +36,7 @@ class _AuthScreenState extends State<AuthScreen> {
             style: TextStyle(
               fontSize: 60,
               color: Colors.white,
-              fontFamily: 'Signatra',
+              fontFamily: 'TrainOne',
             ),
           ),
           centerTitle: true,

@@ -76,7 +76,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future readDataAndSetDataLocally(User currentUser) async {
     await FirebaseFirestore.instance
-        .collection("riders")
+        .collection("users")
         .doc(currentUser.uid)
         .get()
         .then(
@@ -84,11 +84,11 @@ class _LoginScreenState extends State<LoginScreen> {
         if (snapshot.exists) {
           await sharedPreferences!.setString("uid", currentUser.uid);
           await sharedPreferences!
-              .setString("email", snapshot.data()!["riderEmail"]);
+              .setString("email", snapshot.data()!["userEmail"]);
           await sharedPreferences!
-              .setString("name", snapshot.data()!["riderName"]);
+              .setString("name", snapshot.data()!["userName"]);
           await sharedPreferences!
-              .setString("photoUrl", snapshot.data()!["riderAvatarUrl"]);
+              .setString("photoUrl", snapshot.data()!["userAvatarUrl"]);
 
           // ignore: use_build_context_synchronously
           Navigator.pop(context);
@@ -132,7 +132,7 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Padding(
               padding: const EdgeInsets.all(15),
               child: Image.asset(
-                'images/signin.png',
+                'images/login.png',
                 height: 270,
               ),
             ),
