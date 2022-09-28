@@ -3,6 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:panda_users_app/global/global.dart';
+import 'package:panda_users_app/models/sellers.dart';
+import 'package:panda_users_app/widgets/info_design.dart';
 import 'package:panda_users_app/widgets/my_drawer.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -61,62 +63,80 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       drawer: const MyDrawer(),
       body: CustomScrollView(
-          // slivers: [
-          //   SliverToBoxAdapter(
-          //     child: Padding(
-          //       padding: const EdgeInsets.all(10.0),
-          //       child: Container(
-          //         height: MediaQuery.of(context).size.height * .3,
-          //         width: MediaQuery.of(context).size.width,
-          //         child: CarouselSlider(
-          //           options: CarouselOptions(
-          //             height: MediaQuery.of(context).size.height * .3,
-          //             aspectRatio: 16 / 9,
-          //             viewportFraction: 0.8,
-          //             initialPage: 0,
-          //             enableInfiniteScroll: true,
-          //             reverse: false,
-          //             autoPlay: true,
-          //             autoPlayInterval: const Duration(seconds: 3),
-          //             autoPlayAnimationDuration:
-          //                 const Duration(milliseconds: 800),
-          //             autoPlayCurve: Curves.fastOutSlowIn,
-          //             enlargeCenterPage: true,
-          //             scrollDirection: Axis.horizontal,
-          //           ),
-          //           items: items.map((index) {
-          //             return Builder(builder: (BuildContext context) {
-          //               return Container(
-          //                 width: MediaQuery.of(context).size.width,
-          //                 margin: const EdgeInsets.symmetric(horizontal: 1.0),
-          //                 decoration: const BoxDecoration(
-          //                   color: Colors.black,
-          //                 ),
-          //                 child: Padding(
-          //                   padding: const EdgeInsets.all(4.0),
-          //                   child: Image.asset(
-          //                     index,
-          //                     fit: BoxFit.fill,
-          //                   ),
-          //                 ),
-          //               );
-          //             });
-          //           }).toList(),
-          //         ),
-          //       ),
-          //     ),
-          //   ),
-          //   StreamBuilder<QuerySnapshot>(
-          //     stream:
-          //         FirebaseFirestore.instance.collection("sellers").snapshots(),
-          //     builder: (context, snapshot) {
-          //       return snapshot.hasData ? SliverToBoxAdapter(child: Center(
-          //         child: CircularProgressIndicator(),
-          //       ),) : StaggeredGrid.countBuilder
-          //     },
-          //   ),
-          // ],
+        slivers: [
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Container(
+                height: MediaQuery.of(context).size.height * .3,
+                width: MediaQuery.of(context).size.width,
+                child: CarouselSlider(
+                  options: CarouselOptions(
+                    height: MediaQuery.of(context).size.height * .3,
+                    aspectRatio: 16 / 9,
+                    viewportFraction: 0.8,
+                    initialPage: 0,
+                    enableInfiniteScroll: true,
+                    reverse: false,
+                    autoPlay: true,
+                    autoPlayInterval: const Duration(seconds: 3),
+                    autoPlayAnimationDuration:
+                        const Duration(milliseconds: 800),
+                    autoPlayCurve: Curves.fastOutSlowIn,
+                    enlargeCenterPage: true,
+                    scrollDirection: Axis.horizontal,
+                  ),
+                  items: items.map((index) {
+                    return Builder(builder: (BuildContext context) {
+                      return Container(
+                        width: MediaQuery.of(context).size.width,
+                        margin: const EdgeInsets.symmetric(horizontal: 1.0),
+                        decoration: const BoxDecoration(
+                          color: Colors.black,
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: Image.asset(
+                            index,
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                      );
+                    });
+                  }).toList(),
+                ),
+              ),
+            ),
           ),
+          StreamBuilder<QuerySnapshot>(
+            stream:
+                FirebaseFirestore.instance.collection("sellers").snapshots(),
+            builder: (context, snapshot) {
+              return !snapshot.hasData
+                  ? const SliverToBoxAdapter(
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    )
+                  : SliverStaggeredGrid.countBuilder(
+                      crossAxisCount: 1,
+                      staggeredTileBuilder: (c) => const StaggeredTile.fit(1),
+                      itemBuilder: (context, index) {
+                        Sellers sModel = Sellers.fromJson(
+                          snapshot.data!.docs[index].data()!
+                              as Map<String, dynamic>,
+                        );
+                        return InfoDesignWidget(
+                          model: sModel,
+                          context: context,
+                        );
+                      },
+                      itemCount: snapshot.data!.docs.length,
+                    );
+            },
+          ),
+        ],
+      ),
     );
   }
 }

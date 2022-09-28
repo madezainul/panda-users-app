@@ -35,7 +35,7 @@ dependencies:
   firebase_storage: ^10.3.8
   flutter:
     sdk: flutter
-  flutter_staggered_grid_view: ^0.6.2
+  flutter_staggered_grid_view: ^0.4.1
   geocoding: ^2.0.5
   geolocator: ^9.0.1
   image_picker: ^0.8.5+3
